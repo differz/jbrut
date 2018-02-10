@@ -13,11 +13,14 @@ public class BrutBenchmark {
     @Benchmark
     public void testFinder() throws Exception {
         String key = "999999";
-        MessageDigest digest = MessageDigest.getInstance("SHA-256");
-        byte[] hash = digest.digest(key.getBytes());
-        byte[] availableChars = "1234567890".getBytes();
+        String from = "1234567890";
+        String type = "SHA-256";
 
-        Finder finder = new Finder(hash, availableChars, key.length());
+        MessageDigest digest = MessageDigest.getInstance(type);
+        byte[] hash = digest.digest(key.getBytes());
+        byte[] chars = from.getBytes();
+
+        Finder finder = new Finder(type, hash, chars, key.length());
         String result = finder.find();
         finder.stop();
     }

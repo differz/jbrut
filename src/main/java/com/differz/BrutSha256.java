@@ -6,13 +6,16 @@ public class BrutSha256 {
 
     public static void main(String[] args) throws Exception {
         String key = "99999999";
-        MessageDigest digest = MessageDigest.getInstance("SHA-256");
+        String from = "1234567890";
+        String type = "SHA-256";
+
+        MessageDigest digest = MessageDigest.getInstance(type);
         byte[] hash = digest.digest(key.getBytes());
-        byte[] availableChars = "1234567890".getBytes();
+        byte[] chars = from.getBytes();
 
         long start = System.nanoTime();
 
-        Finder finder = new Finder(hash, availableChars, key.length());
+        Finder finder = new Finder(type, hash, chars, key.length());
         String result = finder.find();
         finder.stop();
 

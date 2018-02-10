@@ -6,15 +6,18 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 
 public class FindTask implements Callable<String> {
-    private ExecutorService executor;
-    private int start;
-    private int stop;
-    private byte[] hash;
-    private byte[] chars;
-    private int length;
+    private final ExecutorService executor;
+    private final MessageDigest digest;
+    private final int start;
+    private final int stop;
+    private final byte[] hash;
+    private final byte[] chars;
+    private final int length;
 
-    public FindTask(ExecutorService executor, int start, int stop, byte[] hash, byte[] chars, int length) {
+    public FindTask(ExecutorService executor, MessageDigest digest,
+                    int start, int stop, byte[] hash, byte[] chars, int length) {
         this.executor = executor;
+        this.digest = digest;
         this.start = start;
         this.stop = stop;
         this.hash = hash;
@@ -23,8 +26,7 @@ public class FindTask implements Callable<String> {
     }
 
     @Override
-    public String call() throws Exception {
-        MessageDigest digest = MessageDigest.getInstance("SHA-256");
+    public String call() {
         int base = chars.length;
         byte[] buf = new byte[length];
 
@@ -41,7 +43,7 @@ public class FindTask implements Callable<String> {
 
             if (Arrays.equals(hash, digest.digest(buf))) {
                 executor.shutdownNow();
-                return new String(buf, "UTF-8");
+                return new String(buf);
             }
         }
         return "";
